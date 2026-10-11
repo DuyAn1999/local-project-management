@@ -2,7 +2,7 @@
 
 A desktop app for discovering coding projects inside selected folders, identifying their languages, and offering commands to run them—for example, scripts from a Node project's `package.json`.
 
-**Current status: CP01, desktop foundation.** The app launches and verifies its isolated Electron bridge. Folder selection, scanning and project execution are not implemented yet.
+**Current status: CP02, application shell and design system.** The app has folder navigation, a project-browser region, a detail region and a first-use empty state. It follows system light/dark appearance and adapts to narrow layouts. Folder selection, scanning and project execution are not implemented yet; those controls are visibly unavailable.
 
 ## Development
 
@@ -14,6 +14,14 @@ npm start
 ```
 
 The first launch/package operation may download the official Electron runtime. Development runs Vite on `127.0.0.1:5173`; that port must be available. Stop the development session with Ctrl+C in its terminal (closing the window alone keeps a macOS app active).
+
+### Design preview
+
+While running `npm start`, select **Design preview** in the app footer. Choose Populated, First use, or Long names and paths to review the layout. Project selection and script disclosures work with the keyboard; folder, scan and run actions remain disabled. Select **Exit design preview** to return to the real empty state.
+
+The preview uses explicitly labeled sample data, reads no local projects and runs no commands. Its entry link and fixture module are development-only; a packaged app always starts empty, even if opened with `#design-preview`.
+
+With the development app running, `npm run test:design` checks preview entry/exit, keyboard selection, and layout overflow in both themes at 320, 480, 768, 1,000 and 1,280 pixels. These are behavior/layout checks, not screenshot snapshots. Screenshots for visual review are written under `test-results/` and are replaced on each test run.
 
 ## Checks and local packaging
 
@@ -42,6 +50,9 @@ The `development` smoke project launches the installed Electron binary against t
 | `src/main` | App/window lifecycle and validated IPC handlers |
 | `src/preload` | Narrow, typed bridge exposed through `contextBridge` |
 | `src/renderer` | React interface; no native Node/Electron imports |
+| `src/renderer/components` | Application shell, sidebar, project browser and detail views |
+| `src/renderer/ui` | Shared theme/spacing/type tokens, buttons and decorative icons |
+| `src/renderer/dev` | Development-only fixture preview, excluded from production bundles |
 | `src/shared` | Shared request/response types and validation |
 | `build` | Content-security policy used by the renderer build |
 | `tests/unit` | Sender/request validation and policy checks |
@@ -55,3 +66,4 @@ The renderer is sandboxed with context isolation enabled and Node integration di
 - [Architecture and scope](docs/IMPLEMENTATION_PLAN.md)
 - [UI/UX specification](docs/UI_UX.md)
 - [CP01 validation record](docs/CP01_VALIDATION.md)
+- [CP02 changes and validation](docs/CP02_VALIDATION.md)

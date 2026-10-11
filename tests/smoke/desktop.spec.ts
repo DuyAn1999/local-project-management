@@ -24,7 +24,7 @@ test('launches with an isolated renderer and a validated app-info bridge', async
 
   try {
     const window = await app.firstWindow();
-    await expect(window.getByRole('heading', { name: 'Local Projects', exact: true })).toBeVisible();
+    await expect(window.getByRole('heading', { name: 'All projects', exact: true })).toBeVisible();
     await expect(window.getByRole('status')).toHaveText('Desktop connection ready');
 
     const result = await window.evaluate(async () => ({

@@ -16,9 +16,10 @@
     "lint": "eslint . --max-warnings=0",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:smoke": "playwright test",
+    "test:smoke": "playwright test --project=development --project=packaged",
     "test:smoke:packaged": "playwright test --project=packaged",
     "test:smoke:development": "playwright test --project=development",
+    "test:design": "playwright test --project=design",
     "build": "electron-forge package",
     "package": "electron-forge package",
     "check": "npm run typecheck && npm run lint && npm test"

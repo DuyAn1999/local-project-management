@@ -7,5 +7,9 @@ export default defineConfig({
   workers: 1,
   retries: 0,
   reporter: 'list',
-  projects: [{ name: 'development' }, { name: 'packaged' }],
+  projects: [
+    { name: 'development', testIgnore: '**/design.spec.ts' },
+    { name: 'packaged', testIgnore: '**/design.spec.ts' },
+    { name: 'design', testMatch: '**/design.spec.ts' },
+  ],
 });

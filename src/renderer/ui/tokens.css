@@ -1,0 +1,34 @@
+:root {
+  color-scheme: light dark;
+  --color-surface: light-dark(#ffffff, #181b21);
+  --color-sidebar: light-dark(#f5f6f8, #14171c);
+  --color-inset: light-dark(#f8f9fb, #20242c);
+  --color-text: light-dark(#20242c, #eef1f5);
+  --color-muted: light-dark(#606977, #aeb6c4);
+  --color-border: light-dark(#dfe3e9, #353c47);
+  --color-accent: light-dark(#2859c5, #9ab8ff);
+  --color-on-accent: light-dark(#ffffff, #181b21);
+  --color-selected: light-dark(#edf2ff, #27354f);
+  --color-focus: light-dark(#2859c5, #9ab8ff);
+  --color-success: light-dark(#287047, #8ad6a8);
+  --color-error: light-dark(#b42318, #ffb4ab);
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+  --text-body: 14px;
+  --text-small: 12px;
+  --text-title: 24px;
+  --text-project-title: 20px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --radius-control: 8px;
+  --radius-row: 10px;
+  font: var(--text-body)/1.5 var(--font-sans);
+  color: var(--color-text);
+  background: var(--color-surface);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
