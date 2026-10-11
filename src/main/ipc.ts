@@ -26,12 +26,16 @@ export function handleAppInfo(
   args: readonly unknown[],
   info: AppInfo,
 ): AppInfo {
-  if (!sender.isAppWindow || !sender.isMainFrame
-    || !isTrustedRendererUrl(sender.frameUrl, sender.expectedUrl)) {
-    throw new Error('Untrusted IPC sender');
-  }
+  assertTrustedSender(sender);
   if (args.length !== 1 || !isAppInfoRequest(args[0])) {
     throw new Error('Invalid app info request');
   }
   return { ...info };
+}
+
+export function assertTrustedSender(sender: SenderContext): void {
+  if (!sender.isAppWindow || !sender.isMainFrame
+    || !isTrustedRendererUrl(sender.frameUrl, sender.expectedUrl)) {
+    throw new Error('Untrusted IPC sender');
+  }
 }

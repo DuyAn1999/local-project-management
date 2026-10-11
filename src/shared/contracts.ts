@@ -13,6 +13,7 @@ export interface AppInfo {
 
 export interface DesktopAPI {
   getAppInfo(request: AppInfoRequest): Promise<AppInfo>;
+  manageFolders(request: import('./folders').FolderRequest): Promise<import('./folders').FolderSnapshot>;
 }
 
 export function isAppInfoRequest(value: unknown): value is AppInfoRequest {

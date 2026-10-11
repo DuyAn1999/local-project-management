@@ -10,10 +10,10 @@ test('first use stays empty, supports keyboard entry and fits both themes', asyn
     await expect(page.getByRole('heading', { name: 'Your projects, in one place' })).toBeVisible();
     await expect(page.getByRole('status', { name: 'Desktop connection' })).toHaveText('Desktop connection ready');
     await expect(page.getByRole('heading', { name: '0 projects' })).toBeVisible();
-    for (const button of await page.getByRole('button', { name: 'Add folder', exact: true }).all()) await expect(button).toBeDisabled();
+    for (const button of await page.getByRole('button', { name: 'Add folder', exact: true }).all()) await expect(button).toBeEnabled();
     await expect(page.getByRole('button', { name: 'Rescan' })).toBeDisabled();
     await expect(page.getByRole('searchbox')).toBeDisabled();
-    await expect(page.getByText('Folder selection and scanning are coming soon.')).toBeVisible();
+    await expect(page.getByText('Save a folder now. Project scanning is coming next.')).toBeVisible();
 
     await page.keyboard.press('Tab');
     await expect(page.getByRole('link', { name: 'Skip to projects' })).toBeFocused();

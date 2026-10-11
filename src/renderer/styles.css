@@ -145,3 +145,27 @@ summary { cursor: pointer; width: fit-content; max-width: 100%; padding: 2px 0; 
 }
 @media (pointer: coarse) { .button, .nav-item, select, .search-field, summary { min-height: 44px; } summary { display: flex; align-items: center; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; } }
+
+.folder-navigation, .saved-folders { min-width: 0; max-width: 100%; }
+.saved-folders { width: 100%; }
+.saved-folder { align-items: flex-start; width: 100%; }
+.saved-folder .icon { margin-top: 2px; }
+.saved-folder-path { display: block; font-size: 10px; font-weight: 400; color: var(--color-muted); margin-top: 4px; overflow-wrap: anywhere; }
+.folder-unavailable { display: block; color: var(--color-error); font-size: var(--text-small); margin-top: 4px; }
+.folder-feedback { padding: 0 24px; font-size: var(--text-small); overflow-wrap: anywhere; }
+.folder-feedback p:not(:empty) { margin-bottom: 12px; }
+.folder-error { color: var(--color-error); margin-bottom: 16px; }
+.recovery-notice { padding: 12px; background: var(--color-selected); border-radius: var(--radius-control); }
+.folder-details .section-eyebrow { display: block; margin: 0 0 8px; }
+.folder-details h3 { font-size: var(--text-body); }
+.folder-status { margin: 24px 0; padding: 16px; border: 1px solid var(--color-border); border-radius: var(--radius-control); background: var(--color-inset); }
+.folder-status p { color: var(--color-muted); font-size: var(--text-small); margin-top: 8px; }
+.folder-status--unavailable h3 { color: var(--color-error); }
+.folder-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.exclusions-form label { display: block; font-weight: 500; margin-bottom: 8px; }
+.exclusions-form textarea { display: block; width: 100%; resize: vertical; min-height: 100px; max-height: 400px; margin: 12px 0 8px; padding: 12px; background: var(--color-inset); color: var(--color-text); border: 1px solid var(--color-border); border-radius: var(--radius-control); font: var(--text-small)/1.6 var(--font-mono); }
+.exclusions-form textarea:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+.exclusions-form textarea[aria-invalid='true'] { border-color: var(--color-error); }
+.remove-folder { border-top: 1px solid var(--color-border); margin-top: 28px; padding-top: 24px; }
+.remove-folder p { margin: 8px 0 12px; }
+.button--primary:not(:disabled):hover { background: var(--color-accent); filter: brightness(.94); }

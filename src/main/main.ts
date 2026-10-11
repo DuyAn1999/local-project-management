@@ -1,8 +1,10 @@
-import { app, BrowserWindow, ipcMain, session } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, session } from 'electron';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { APP_INFO_CHANNEL } from '../shared/contracts';
-import { handleAppInfo, isTrustedRendererUrl } from './ipc';
+import { assertTrustedSender, handleAppInfo, isTrustedRendererUrl } from './ipc';
+import { FOLDERS_CHANNEL, isFolderRequest } from '../shared/folders';
+import { FolderService } from './folders';
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string | undefined;
 declare const MAIN_WINDOW_VITE_NAME: string;
@@ -50,6 +52,23 @@ function createWindow(): void {
 void app.whenReady().then(() => {
   session.defaultSession.setPermissionRequestHandler((_contents, _permission, callback) => callback(false));
   session.defaultSession.setPermissionCheckHandler(() => false);
+
+  const folders = new FolderService(path.join(app.getPath('userData'), 'settings.json'), async () => {
+    if (!mainWindow) throw new Error('Open the app window to choose a folder.');
+    const result = await dialog.showOpenDialog(mainWindow, {
+      title: 'Choose a project folder', buttonLabel: 'Choose folder', properties: ['openDirectory'],
+    });
+    return result.canceled ? undefined : result.filePaths[0];
+  });
+  ipcMain.handle(FOLDERS_CHANNEL, (event, ...args: unknown[]) => {
+    assertTrustedSender({
+      isAppWindow: mainWindow !== null && event.sender === mainWindow.webContents,
+      isMainFrame: event.senderFrame !== null && event.senderFrame === event.sender.mainFrame,
+      frameUrl: event.senderFrame?.url ?? '', expectedUrl: rendererUrl,
+    });
+    if (args.length !== 1 || !isFolderRequest(args[0])) throw new Error('Invalid folder request');
+    return folders.handle(args[0]);
+  });
 
   ipcMain.handle(APP_INFO_CHANNEL, (event, ...args: unknown[]) => handleAppInfo({
     isAppWindow: mainWindow !== null && event.sender === mainWindow.webContents,

@@ -2,14 +2,14 @@ import { Button } from '../ui/Button';
 import { Icon } from '../ui/Icon';
 import type { ProjectPresentation } from './shell-types';
 
-export function ProjectDetails({ project }: { project?: ProjectPresentation }) {
+export function ProjectDetails({ project, onAdd, folderBusy }: { project?: ProjectPresentation; onAdd?: () => void; folderBusy?: boolean }) {
   if (!project) {
     return <section className="project-detail welcome" aria-labelledby="welcome-heading"><div className="welcome-content">
       <div className="welcome-icon"><Icon name="folder" /><span className="welcome-plus"><Icon name="plus" /></span></div>
       <h2 id="welcome-heading">Your projects, in one place</h2>
       <p>Choose a folder to find projects<br className="desktop-break" /> and their run commands.</p>
-      <Button variant="primary" disabled aria-describedby="folder-availability"><Icon name="plus" />Add folder</Button>
-      <p className="availability-note" id="folder-availability">Folder selection and scanning are coming soon.</p>
+      <Button variant="primary" disabled={!onAdd || folderBusy} onClick={onAdd} aria-describedby="folder-availability"><Icon name="plus" />Add folder</Button>
+      <p className="availability-note" id="folder-availability">{onAdd ? 'Save a folder now. Project scanning is coming next.' : 'Preview only. Folder selection and scanning are unavailable.'}</p>
       <div className="welcome-steps" aria-label="How Local Projects works"><span>Choose a folder</span><Icon name="chevron" /><span>Find a project</span><Icon name="chevron" /><span>Run a command</span></div>
     </div></section>;
   }

@@ -25,7 +25,7 @@ test('launches with an isolated renderer and a validated app-info bridge', async
   try {
     const window = await app.firstWindow();
     await expect(window.getByRole('heading', { name: 'All projects', exact: true })).toBeVisible();
-    await expect(window.getByRole('status')).toHaveText('Desktop connection ready');
+    await expect(window.getByRole('status', { name: 'Desktop connection' })).toHaveText('Desktop connection ready');
 
     const result = await window.evaluate(async () => ({
       info: await globalThis.window.desktop.getAppInfo({ protocolVersion: 1 }),
@@ -35,7 +35,7 @@ test('launches with an isolated renderer and a validated app-info bridge', async
       ipcAvailable: 'ipcRenderer' in globalThis.window,
     }));
     expect(result.info).toMatchObject({ name: 'Local Projects', version: '0.1.0', platform: process.platform, packaged });
-    expect(result.methods).toEqual(['getAppInfo']);
+    expect(result.methods).toEqual(['getAppInfo', 'manageFolders']);
     expect(result.requireAvailable).toBe(false);
     expect(result.processAvailable).toBe(false);
     expect(result.ipcAvailable).toBe(false);
@@ -81,12 +81,13 @@ test('launches with an isolated renderer and a validated app-info bridge', async
       });
       try {
         await impostor.loadURL(original.webContents.getURL());
-        return await impostor.webContents.executeJavaScript(`window.desktop.getAppInfo({protocolVersion: 1}).then(() => 'unexpectedly accepted', error => String(error))`);
+        return await impostor.webContents.executeJavaScript(`Promise.all([window.desktop.getAppInfo({protocolVersion: 1}), window.desktop.manageFolders({protocolVersion: 1, action: 'add'})].map(promise => promise.then(() => 'unexpectedly accepted', error => String(error))))`);
       } finally {
         impostor.destroy();
       }
     }, path.join(appPath, '.vite/build/preload.cjs'));
-    expect(impostorResult).toContain('Untrusted IPC sender');
+    expect(impostorResult).toHaveLength(2);
+    for (const rejection of impostorResult) expect(rejection).toContain('Untrusted IPC sender');
 
     if (packaged) {
       const policy = await window.locator('meta[http-equiv="Content-Security-Policy"]').getAttribute('content');
