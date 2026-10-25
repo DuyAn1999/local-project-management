@@ -14,6 +14,8 @@ export interface AppInfo {
 export interface DesktopAPI {
   getAppInfo(request: AppInfoRequest): Promise<AppInfo>;
   manageFolders(request: import('./folders').FolderRequest): Promise<import('./folders').FolderSnapshot>;
+  scanProjects(request: AppInfoRequest): Promise<import('./scanning').ScanSnapshot>;
+  onScanUpdate(listener: (update: import('./scanning').ScanUpdate) => void): () => void;
 }
 
 export function isAppInfoRequest(value: unknown): value is AppInfoRequest {

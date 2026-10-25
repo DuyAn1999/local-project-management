@@ -17,7 +17,7 @@ export function useFolders(enabled: boolean) {
       setSnapshot(result); setReady(true);
       setSelectedId((id) => result.selectedId ?? (result.roots.some((root) => root.id === id) ? id : result.roots[0]?.id));
       if (input.action === 'remove') setNotice('Folder removed from Local Projects. Files on disk were kept.');
-      if (input.action === 'exclusions') setNotice('Scan exclusions saved. They will apply when scanning is available.');
+      if (input.action === 'exclusions') setNotice('Scan exclusions saved. Project discovery is using the updated settings.');
       if (input.action === 'list') setNotice('Folder availability checked.');
       return true;
     } catch (error) {

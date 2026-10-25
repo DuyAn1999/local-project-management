@@ -14,7 +14,7 @@ export function FolderDetails({ root, folders, onRemoved }: { root: FolderSnapsh
     <header className="project-detail-heading"><span className="section-eyebrow">Saved folder</span><h2 id="folder-detail-heading">{name}</h2><p className="path-text">{root.path}</p></header>
     <div className={`folder-status ${root.available ? '' : 'folder-status--unavailable'}`}>
       <h3>{root.available ? 'Ready for project discovery' : 'This folder is no longer available.'}</h3>
-      <p>{root.available ? 'Your folder is saved. Project scanning is not available in this version.' : 'It may have moved, been disconnected, or lost access. Choose its current location or check again.'}</p>
+      <p>{root.available ? 'Node projects are discovered automatically when this folder is added, its settings change, or the app opens. Select a project from the list to inspect it.' : 'It may have moved, been disconnected, or lost access. Choose its current location or check again.'}</p>
       <div className="folder-actions">
         {!root.available && <Button variant="primary" disabled={folders.busy} onClick={() => void folders.request({ protocolVersion: 1, action: 'locate', id: root.id })}>Locate folder</Button>}
         <Button disabled={folders.busy} onClick={() => void folders.request({ protocolVersion: 1, action: 'list' })}>Check availability</Button>

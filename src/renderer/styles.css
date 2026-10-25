@@ -169,3 +169,9 @@ summary { cursor: pointer; width: fit-content; max-width: 100%; padding: 2px 0; 
 .remove-folder { border-top: 1px solid var(--color-border); margin-top: 28px; padding-top: 24px; }
 .remove-folder p { margin: 8px 0 12px; }
 .button--primary:not(:disabled):hover { background: var(--color-accent); filter: brightness(.94); }
+.scan-warnings { margin-bottom: 16px; }
+.scan-warnings ul { max-height: 220px; overflow-y: auto; }
+.scan-warnings li { padding: 8px 0; border-bottom: 1px solid var(--color-border); }
+.evidence-list { margin-top: 12px; overflow-wrap: anywhere; max-height: 240px; overflow-y: auto; }
+.discovery-commands { margin-top: 24px; }
+.discovery-commands p { margin: 8px 0 16px; }

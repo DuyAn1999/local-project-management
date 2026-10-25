@@ -1,7 +1,9 @@
 import { app, BrowserWindow, dialog, ipcMain, session } from 'electron';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { APP_INFO_CHANNEL } from '../shared/contracts';
+import { APP_INFO_CHANNEL, isAppInfoRequest } from '../shared/contracts';
+import { SCAN_CHANNEL, SCAN_UPDATE_CHANNEL } from '../shared/scanning';
+import { ScanService } from './scans';
 import { assertTrustedSender, handleAppInfo, isTrustedRendererUrl } from './ipc';
 import { FOLDERS_CHANNEL, isFolderRequest } from '../shared/folders';
 import { FolderService } from './folders';
@@ -53,6 +55,13 @@ void app.whenReady().then(() => {
   session.defaultSession.setPermissionRequestHandler((_contents, _permission, callback) => callback(false));
   session.defaultSession.setPermissionCheckHandler(() => false);
 
+  const workerFile = path.join(__dirname, 'scan-worker.cjs').replace(/app\.asar([/\\])/, 'app.asar.unpacked$1');
+  const scans = new ScanService(workerFile, (update) => {
+    const contents = mainWindow?.webContents;
+    if (contents && !contents.isDestroyed() && isTrustedRendererUrl(contents.getURL(), rendererUrl)) contents.send(SCAN_UPDATE_CHANNEL, update);
+  });
+  app.on('before-quit', () => scans.dispose());
+
   const folders = new FolderService(path.join(app.getPath('userData'), 'settings.json'), async () => {
     if (!mainWindow) throw new Error('Open the app window to choose a folder.');
     const result = await dialog.showOpenDialog(mainWindow, {
@@ -60,14 +69,26 @@ void app.whenReady().then(() => {
     });
     return result.canceled ? undefined : result.filePaths[0];
   });
-  ipcMain.handle(FOLDERS_CHANNEL, (event, ...args: unknown[]) => {
+  ipcMain.handle(FOLDERS_CHANNEL, async (event, ...args: unknown[]) => {
     assertTrustedSender({
       isAppWindow: mainWindow !== null && event.sender === mainWindow.webContents,
       isMainFrame: event.senderFrame !== null && event.senderFrame === event.sender.mainFrame,
       frameUrl: event.senderFrame?.url ?? '', expectedUrl: rendererUrl,
     });
     if (args.length !== 1 || !isFolderRequest(args[0])) throw new Error('Invalid folder request');
-    return folders.handle(args[0]);
+    const snapshot = await folders.handle(args[0]);
+    if (args[0].action !== 'list') scans.ensure(snapshot.roots);
+    return snapshot;
+  });
+
+  ipcMain.handle(SCAN_CHANNEL, async (event, ...args: unknown[]) => {
+    assertTrustedSender({
+      isAppWindow: mainWindow !== null && event.sender === mainWindow.webContents,
+      isMainFrame: event.senderFrame !== null && event.senderFrame === event.sender.mainFrame,
+      frameUrl: event.senderFrame?.url ?? '', expectedUrl: rendererUrl,
+    });
+    if (args.length !== 1 || !isAppInfoRequest(args[0])) throw new Error('Invalid scan request');
+    return scans.ensure((await folders.handle({ protocolVersion: 1, action: 'list' })).roots);
   });
 
   ipcMain.handle(APP_INFO_CHANNEL, (event, ...args: unknown[]) => handleAppInfo({

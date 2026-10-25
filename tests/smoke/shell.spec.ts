@@ -13,7 +13,7 @@ test('first use stays empty, supports keyboard entry and fits both themes', asyn
     for (const button of await page.getByRole('button', { name: 'Add folder', exact: true }).all()) await expect(button).toBeEnabled();
     await expect(page.getByRole('button', { name: 'Rescan' })).toBeDisabled();
     await expect(page.getByRole('searchbox')).toBeDisabled();
-    await expect(page.getByText('Save a folder now. Project scanning is coming next.')).toBeVisible();
+    await expect(page.getByText('Choose a folder to discover Node projects. Commands cannot run yet.')).toBeVisible();
 
     await page.keyboard.press('Tab');
     await expect(page.getByRole('link', { name: 'Skip to projects' })).toBeFocused();

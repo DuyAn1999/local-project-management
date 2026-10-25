@@ -9,7 +9,7 @@ export function ProjectDetails({ project, onAdd, folderBusy }: { project?: Proje
       <h2 id="welcome-heading">Your projects, in one place</h2>
       <p>Choose a folder to find projects<br className="desktop-break" /> and their run commands.</p>
       <Button variant="primary" disabled={!onAdd || folderBusy} onClick={onAdd} aria-describedby="folder-availability"><Icon name="plus" />Add folder</Button>
-      <p className="availability-note" id="folder-availability">{onAdd ? 'Save a folder now. Project scanning is coming next.' : 'Preview only. Folder selection and scanning are unavailable.'}</p>
+      <p className="availability-note" id="folder-availability">{onAdd ? 'Choose a folder to discover Node projects. Commands cannot run yet.' : 'Preview only. Folder selection and scanning are unavailable.'}</p>
       <div className="welcome-steps" aria-label="How Local Projects works"><span>Choose a folder</span><Icon name="chevron" /><span>Find a project</span><Icon name="chevron" /><span>Run a command</span></div>
     </div></section>;
   }

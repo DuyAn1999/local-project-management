@@ -35,7 +35,7 @@ test('launches with an isolated renderer and a validated app-info bridge', async
       ipcAvailable: 'ipcRenderer' in globalThis.window,
     }));
     expect(result.info).toMatchObject({ name: 'Local Projects', version: '0.1.0', platform: process.platform, packaged });
-    expect(result.methods).toEqual(['getAppInfo', 'manageFolders']);
+    expect(result.methods).toEqual(['getAppInfo', 'manageFolders', 'scanProjects', 'onScanUpdate']);
     expect(result.requireAvailable).toBe(false);
     expect(result.processAvailable).toBe(false);
     expect(result.ipcAvailable).toBe(false);
@@ -81,12 +81,12 @@ test('launches with an isolated renderer and a validated app-info bridge', async
       });
       try {
         await impostor.loadURL(original.webContents.getURL());
-        return await impostor.webContents.executeJavaScript(`Promise.all([window.desktop.getAppInfo({protocolVersion: 1}), window.desktop.manageFolders({protocolVersion: 1, action: 'add'})].map(promise => promise.then(() => 'unexpectedly accepted', error => String(error))))`);
+        return await impostor.webContents.executeJavaScript(`Promise.all([window.desktop.getAppInfo({protocolVersion: 1}), window.desktop.manageFolders({protocolVersion: 1, action: 'add'}), window.desktop.scanProjects({protocolVersion: 1})].map(promise => promise.then(() => 'unexpectedly accepted', error => String(error))))`);
       } finally {
         impostor.destroy();
       }
     }, path.join(appPath, '.vite/build/preload.cjs'));
-    expect(impostorResult).toHaveLength(2);
+    expect(impostorResult).toHaveLength(3);
     for (const rejection of impostorResult) expect(rejection).toContain('Untrusted IPC sender');
 
     if (packaged) {
